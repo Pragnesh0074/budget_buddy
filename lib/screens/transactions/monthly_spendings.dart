@@ -30,7 +30,10 @@ class _MonthlySpendingsState extends State<MonthlySpendings> {
 
   @override
   Widget build(BuildContext context) {
-    final monthlyTrans = trxData.monthlyTransactions(dropdownValue, _selectedYear);
+    final monthlyTrans = trxData.monthlyTransactions(
+      dropdownValue,
+      _selectedYear,
+    );
     final List<PieData> monthlyData = PieData.pieChartData(monthlyTrans);
 
     return SingleChildScrollView(
@@ -38,63 +41,76 @@ class _MonthlySpendingsState extends State<MonthlySpendings> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            color: Theme.of(context).primaryColorLight,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    dropDownToSelectMonth(),
-                    widgetToSelectYear(),
-                    Text(
-                      "₹${trxData.getTotal(monthlyTrans)}",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
+          Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: MediaQuery.of(context).size.height * 0.02,
+            ),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              color: Theme.of(context).primaryColorLight,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      dropDownToSelectMonth(),
+                      widgetToSelectYear(),
+                      Text(
+                        "₹${trxData.getTotal(monthlyTrans)}",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
                       ),
-                    )
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    const Text(
-                      'Show Chart',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      const Text(
+                        'Show Chart',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    Switch.adaptive(
-                      activeColor: Theme.of(context).colorScheme.secondary,
-                      value: _showChart,
-                      onChanged: (val) {
-                        setState(() {
-                          _showChart = val;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ],
+                      Switch.adaptive(
+                        inactiveTrackColor: Colors.blueAccent,
+                        activeTrackColor: Colors.blueAccent,
+                        value: _showChart,
+                        onChanged: (val) {
+                          setState(() {
+                            _showChart = val;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
           monthlyTrans.isEmpty
-              ? NoTransactions()
+              ? Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: MediaQuery.of(context).size.height * 0.2,
+                ),
+                child: const NoTransactions(),
+              )
               : (_showChart
                   ? MyPieChart(pieData: monthlyData)
                   : ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (ctx, index) {
-                        return TransactionListItems(
-                            trx: monthlyTrans[index], dltTrxItem: deleteFn);
-                      },
-                      itemCount: monthlyTrans.length,
-                    )),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (ctx, index) {
+                      return TransactionListItems(
+                        trx: monthlyTrans[index],
+                        dltTrxItem: deleteFn,
+                      );
+                    },
+                    itemCount: monthlyTrans.length,
+                  )),
         ],
       ),
     );
@@ -105,24 +121,26 @@ class _MonthlySpendingsState extends State<MonthlySpendings> {
       children: <Widget>[
         IconButton(
           icon: const Icon(Icons.arrow_left),
-          onPressed: int.parse(_selectedYear) > 0
-              ? () {
-                  setState(() {
-                    _selectedYear = (int.parse(_selectedYear) - 1).toString();
-                  });
-                }
-              : null,
+          onPressed:
+              int.parse(_selectedYear) > 0
+                  ? () {
+                    setState(() {
+                      _selectedYear = (int.parse(_selectedYear) - 1).toString();
+                    });
+                  }
+                  : null,
         ),
         Text(_selectedYear),
         IconButton(
           icon: const Icon(Icons.arrow_right),
-          onPressed: _selectedYear == DateFormat('yyyy').format(DateTime.now())
-              ? null
-              : () {
-                  setState(() {
-                    _selectedYear = (int.parse(_selectedYear) + 1).toString();
-                  });
-                },
+          onPressed:
+              _selectedYear == DateFormat('yyyy').format(DateTime.now())
+                  ? null
+                  : () {
+                    setState(() {
+                      _selectedYear = (int.parse(_selectedYear) + 1).toString();
+                    });
+                  },
         ),
       ],
     );
@@ -134,23 +152,29 @@ class _MonthlySpendingsState extends State<MonthlySpendings> {
       icon: const Icon(Icons.expand_more),
       elevation: 16,
       style: TextStyle(color: Theme.of(context).primaryColorDark),
-      underline: Container(
-        height: 2,
-        color: Theme.of(context).primaryColor,
-      ),
+      underline: Container(height: 2, color: Theme.of(context).primaryColor),
       onChanged: (String? newValue) {
         setState(() {
           dropdownValue = newValue!;
         });
       },
-      items: const [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-      ].map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
+      items:
+          const [
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'May',
+            'Jun',
+            'Jul',
+            'Aug',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dec',
+          ].map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(value: value, child: Text(value));
+          }).toList(),
     );
   }
 }

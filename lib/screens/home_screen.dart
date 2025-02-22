@@ -4,7 +4,6 @@ import '../models/transaction.dart';
 import './transactions/daily_spendings.dart';
 import './transactions/monthly_spendings.dart';
 import './transactions/yearly_spendings.dart';
-import '../widgets/app_drawer.dart';
 import './new_transaction.dart';
 import './transactions/weekly_spendings.dart';
 
@@ -35,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Home",
+          "Budget Buddy",
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -67,20 +66,15 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             return const Center(child: CircularProgressIndicator());
           } else {
             return TabBarView(
+              controller: tabController,
               children: [
                 DailySpendings(),
                 WeeklySpendings(),
                 MonthlySpendings(),
                 YearlySpendings(),
               ],
-              controller: tabController,
             );
           }
-        },
-      ),
-      drawer: Consumer<Transactions>(
-        builder: (context, trx, child) {
-          return AppDrawer(total: trx.getTotal(trx.transactions));
         },
       ),
     );

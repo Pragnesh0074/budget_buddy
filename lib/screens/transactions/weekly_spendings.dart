@@ -1,4 +1,3 @@
-
 import 'package:budget_buddy/models/pie_data.dart';
 import 'package:budget_buddy/models/transaction.dart';
 import 'package:budget_buddy/screens/statistics/pie_chart.dart';
@@ -25,8 +24,10 @@ class _WeeklySpendingsState extends State<WeeklySpendings> {
 
   @override
   Widget build(BuildContext context) {
-    final deleteFn = Provider.of<Transactions>(context, listen: false).deleteTransaction;
-    final recentTransaction = Provider.of<Transactions>(context).recentTransactions;
+    final deleteFn =
+        Provider.of<Transactions>(context, listen: false).deleteTransaction;
+    final recentTransaction =
+        Provider.of<Transactions>(context).recentTransactions;
     final recentData = PieData.pieChartData(recentTransaction);
 
     return SingleChildScrollView(
@@ -34,68 +35,84 @@ class _WeeklySpendingsState extends State<WeeklySpendings> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            color: Theme.of(context).primaryColorLight,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      "Total:",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
+          Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: MediaQuery.of(context).size.height * 0.02,
+            ),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              color: Theme.of(context).primaryColorLight,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Total:",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
                       ),
-                    ),
-                    Text(
-                      "₹${trxData.getTotal(recentTransaction)}",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
+                      Text(
+                        "₹${trxData.getTotal(recentTransaction)}",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    const Text(
-                      'Show Chart',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      const Text(
+                        'Show Chart',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    Switch.adaptive(
-                      activeColor: Theme.of(context).colorScheme.secondary,
-                      value: _showChart,
-                      onChanged: (val) {
-                        setState(() {
-                          _showChart = val;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ],
+                      Switch.adaptive(
+                        inactiveTrackColor: Colors.blueAccent,
+                        activeTrackColor: Colors.blueAccent,
+                        value: _showChart,
+                        onChanged: (val) {
+                          setState(() {
+                            _showChart = val;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
           recentTransaction.isEmpty
-              ? const NoTransactions()
+              ? Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: MediaQuery.of(context).size.height * 0.2,
+                ),
+                child: const NoTransactions(),
+              )
               : (_showChart
-                  ? WeeklyChart(recentTransaction: recentTransaction, recentData: recentData)
+                  ? WeeklyChart(
+                    recentTransaction: recentTransaction,
+                    recentData: recentData,
+                  )
                   : ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (ctx, index) {
-                        return TransactionListItems(
-                            trx: recentTransaction[index], dltTrxItem: deleteFn);
-                      },
-                      itemCount: recentTransaction.length,
-                    )),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (ctx, index) {
+                      return TransactionListItems(
+                        trx: recentTransaction[index],
+                        dltTrxItem: deleteFn,
+                      );
+                    },
+                    itemCount: recentTransaction.length,
+                  )),
         ],
       ),
     );
@@ -120,7 +137,6 @@ class WeeklyChart extends StatelessWidget {
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(20)),
           ),
-          color: Theme.of(context).primaryColorDark,
           child: MyPieChart(pieData: recentData),
         ),
         WeeklyStats(recentTransactions: recentTransaction),

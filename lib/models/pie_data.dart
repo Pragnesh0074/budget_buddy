@@ -1,6 +1,5 @@
 import 'package:budget_buddy/models/transaction.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
 
 class PieData {
   final String name;
@@ -15,19 +14,33 @@ class PieData {
     required this.price,
   });
 
+  // Define a map of categories to specific colors
+  static final Map<String, Color> categoryColors = {
+    'Food': Colors.orange,
+    'Social Life': Colors.purple,
+    'Self-development': Colors.blue,
+    'Transportation': Colors.green,
+    'Culture': Colors.red,
+    'Household': Colors.teal,
+    'Apparel': Colors.pink,
+    'Beauty': Colors.amber,
+    'Health': Colors.lightBlue,
+    'Education': Colors.indigo,
+    'Gift': Colors.deepPurple,
+    'Other': Colors.grey,
+  };
+
   static List<PieData> pieChartData(List<Transaction> trx) {
     int total = Transactions().getTotal(trx);
     List<Map<String, dynamic>> finalData = sortedPieData(trx);
-    final List<Color> predefinedColors = [
-      Colors.blue, Colors.red, Colors.green, Colors.orange, Colors.purple,
-      Colors.teal, Colors.pink, Colors.yellow, Colors.brown, Colors.cyan
-    ];
-    final Random random = Random();
 
     return finalData.map((element) {
-      Color color = predefinedColors[random.nextInt(predefinedColors.length)];
+      String category = element['title'] as String;
+      // Use the predefined color for the category, fallback to grey if category not found
+      Color color = categoryColors[category] ?? Colors.grey;
+
       return PieData(
-        name: element['title'] as String,
+        name: category,
         percent: (((element['amount'] as int) * 100) / total).roundToDouble(),
         color: color,
         price: element['amount'] as int,

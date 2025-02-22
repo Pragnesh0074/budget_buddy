@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Money Tracker',
+          title: 'Budget Buddy',
           theme: ThemeData(
             primaryColor: Colors.amber,
             colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.amberAccent),

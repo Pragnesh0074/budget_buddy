@@ -24,7 +24,6 @@ class _YearlyStatsState extends State<YearlyStats> {
           height: 350,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(18.0),
-            color: Theme.of(context).primaryColorDark,
           ),
           margin: const EdgeInsets.all(10.0),
           padding: const EdgeInsets.all(16),
@@ -37,7 +36,7 @@ class _YearlyStatsState extends State<YearlyStats> {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
               ),
               const SizedBox(height: 4),
@@ -46,7 +45,7 @@ class _YearlyStatsState extends State<YearlyStats> {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
               ),
               const SizedBox(height: 25),
@@ -82,7 +81,7 @@ class _YearlyStatsState extends State<YearlyStats> {
                     .toString()
                     .substring(0, 3),
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
                 ),

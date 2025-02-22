@@ -7,7 +7,7 @@ class NoTransactions extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
+      // mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Image.asset(
           'assets/images/waiting.png',
